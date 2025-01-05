@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uz Pro Kino</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #room-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #151d3b;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1 id="room-code">TV Kod: Yaratilmoqda...</h1>
+<h2 id="controller">Boshqaruvchi mavjud emas</h2>
+<h3 id="log" style="color: red;"></h3>
+<video id="video-player" controls style="width: 40%; height: auto;"></video>
+
+<script>
+    const socket = new WebSocket("wss://4fun.uz/tv");
+
+    socket.onopen = () => {
+        showError("Ulanmoqda...");
+    };
+
+    socket.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+
+        if (message.type === "room_code") {
+            document.getElementById("room-code").innerText = "TV Kod: " + message.room_code;
+        } else if (message.type === "play_video") {
+            showError('Film yuklanmoqda...')
+            playVideo(message.url);
+        } else if (message.type === "change_owner") {
+            document.getElementById('controller').innerText = "Boshqaruvchi: " + message.owner;
+        }
+    };
+
+    socket.onclose = () => {
+        document.getElementById('room-code').innerText = 'Websocket Closed'
+    };
+
+    function showError(log) {
+        document.getElementById('log').innerText = log
+    }
+
+    function playVideo(url) {
+        const videoPlayer = document.getElementById("video-player");
+        videoPlayer.src = url;
+        videoPlayer.load();
+        videoPlayer.play().catch((error) => {
+            showError("Film yuklashda xatolik, qayta urinilmoqda...");
+
+            if (url.startsWith("https://")) {
+                const httpUrl = url.replace("https://", "http://");
+                showError("Yuklanmoqda,");
+
+                videoPlayer.src = httpUrl;
+                videoPlayer.load();
+                videoPlayer.play().catch((err) => {
+                    showError("Film yuklandi");
+                });
+            } else {
+                showError("Filmni yuklab bo'lmadi");
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

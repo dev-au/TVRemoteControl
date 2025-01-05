@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TV Controller</title>
+</head>
+<body>
+  <h1>Control TV</h1>
+  <input id="room-code" type="text" placeholder="Enter Room Code" />
+  <input id="video-url" type="text" placeholder="Enter Video URL" />
+  <button onclick="connect()">Connect</button>
+  <button onclick="sendVideo()">Send Video</button>
+
+  <script>
+    let socket;
+
+    function connect() {
+      const roomCode = document.getElementById("room-code").value;
+      socket = new WebSocket(`ws://localhost:8000/ws/controller/${roomCode}`);
+
+      socket.onopen = () => {
+        alert("Connected to TV!");
+      };
+
+      socket.onclose = () => {
+        alert("Disconnected!");
+      };
+    }
+
+    function sendVideo() {
+      const url = document.getElementById("video-url").value;
+      const command = JSON.stringify({ type: "play_video", url: url });
+      socket.send(command);
+    }
+  </script>
+</body>
+</html>
