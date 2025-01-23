@@ -13,8 +13,8 @@ users = {}
 async def start_command(message: types.Message):
     keyboard = types.InlineKeyboardButton(text='Kino qidirsh', switch_inline_query_current_chat='')
     reply_markup = types.InlineKeyboardMarkup(inline_keyboard=[[keyboard]])
-    await message.reply('Kino botga xush kelibsiz, kino qidirish uchun quyidagi tugmani bosing. '
-                    'Televizorda tomosha qilish uchun esa Televizordan https://4fun.uz/ saytiga kiring va botga kodni /tv "kod" shaklida kiriting.\n'
+    await message.reply('Kino botga xush kelibsiz, kino qidirish uchun quyidagi tugmani bosing.\n\n'
+                    'Televizorda tomosha qilish uchun esa televizordan https://4fun.uz/ saytiga kiring va botga\n kodni /tv "kod" shaklida kiriting.\n'
                     'Masalan /tv 1403', reply_markup=reply_markup)
 
 
