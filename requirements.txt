@@ -1,8 +1,8 @@
-aiohttp~=3.11.11
-attrs~=24.3.0
-beautifulsoup4~=4.13.0b2
-pydantic~=2.10.4
-aiogram~=3.17.0
-fastapi~=0.115.6
-pydantic-settings~=2.7.1
-starlette~=0.41.3
+aiohttp
+attrs
+beautifulsoup4
+pydantic
+aiogram
+fastapi
+pydantic-settings
+starlette
