@@ -1,11 +1,23 @@
 from aiogram import types
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
-import bot_src, web_src  # noqa
-from web_src.tv_remote import router
+import bot_src  # noqa
+import web_src
 from config import bot, settings, WEBHOOK_PATH, dp
+from web_src.tv_remote import router
 
 app = FastAPI()
+
+# Enable CORS for all domains
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 app.include_router(router)
 
 @app.on_event('startup')
